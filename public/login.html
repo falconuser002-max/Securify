@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Securify</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Securify</h1>
+                <p>Sign in to your account</p>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-group checkbox">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+
+                <div class="divider">OR</div>
+
+                <button type="button" class="btn btn-secondary btn-block" onclick="window.location='signup.html'">Create New Account</button>
+            </form>
+
+            <div class="auth-footer">
+                <a href="#">Forgot password?</a>
+            </div>
+
+            <div class="auth-info">
+                <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+            </div>
+        </div>
+
+        <div class="auth-side">
+            <div class="auth-side-content">
+                <h2>Verify Documents with Confidence</h2>
+                <p>Join thousands of organizations using Securify to detect document fraud instantly.</p>
+                <ul class="benefits-list">
+                    <li>✓ Advanced AI-powered analysis</li>
+                    <li>✓ Results in seconds</li>
+                    <li>✓ Secure cloud storage</li>
+                    <li>✓ Affordable pricing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/dashboard.html';
+                } else {
+                    alert(data.msg || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
